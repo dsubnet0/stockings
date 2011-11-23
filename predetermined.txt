@@ -1,6 +1,3 @@
-Ingrid,Rachel
-Wally,Kate
 Alma,Chip
 Val,Monica
 Monica,Val
-

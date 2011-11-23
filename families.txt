@@ -1,4 +1,4 @@
 Chip,Kathie,Tina,Ken,Alma,Missy,Rick
-Val
+Val,Doug,Carey
 Tom,Monica,Kate,Rachel
 Wally,Ingrid

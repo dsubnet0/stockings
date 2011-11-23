@@ -11,10 +11,10 @@ my @Master = ();
 my %MATCHES = ();
 
 #slurp list of nuclears
-open(NUCLEARS,"./families.txt") or die $!;
+open(NUCLEARS,"/home/Douglas/files/families.txt") or die $!;
 
 #slurp list of predetermineds
-open(PREDETERMINED,"./predetermined.txt") or die $!;
+open(PREDETERMINED,"/home/Douglas/files/predetermined.txt") or die $!;
 
 
 while (<NUCLEARS>) {
@@ -26,14 +26,18 @@ while (<NUCLEARS>) {
 	}
 }
 
+#print Dumper(@Nuclears);
+
 while (<PREDETERMINED>) {
 	chomp($_);
-	next if (/^#/);
 	my @line = split(",",$_);
 	$MATCHES{$line[0]} = $line[1];
 }
 
 
+#print Dumper(\%MATCHES);
+#print Dumper(keys %MATCHES);
+my $num_failures = 0;
 foreach $currNuc (@Nuclears) {
 	undef my %is_nuclear;
 	for (@{$currNuc}) { $is_nuclear{$_} = 1 }
@@ -41,15 +45,16 @@ foreach $currNuc (@Nuclears) {
 		my $i = 1;
 		my $fail = 0;
 		undef my %is_assigned;
-		for (values %MATCHES) { $is_assigned{$_} = 1; }
+		for (values %MATCHES) { $is_assigned{$_} = 1 }
 		if (not exists $MATCHES{$currPerson}) {
 			my $currPick = $Master[rand @Master];
 			my @grep = grep(/^$currPick$/,(values %MATCHES));
 
-			while ( ($currPerson eq $currPick) or $is_assigned{$currPick} or $is_nuclear{$currPick}) {
+			while (($currPerson eq $currPick) || $is_assigned{$currPick} == 1 || $is_nuclear{$currPick}) {
 				$currPick = $Master[rand @Master];
 				if (++$i > @Master ) {
-					print "NO POSSIBLE MATCHES FOUND FOR $currPerson\n\n";
+					#print "NO POSSIBLE MATCHES FOUND FOR $currPerson\n\n";
+					$num_failures++;
 				$fail = 1;
 				last;
 				}
@@ -62,8 +67,9 @@ foreach $currNuc (@Nuclears) {
 	}	
 }
 
-foreach (sort keys %MATCHES) {
-	print "$_\t=>\t$MATCHES{$_}\n";
-}
+#print Dumper(\%MATCHES);
+print "$num_failures \t\t";
+print "$_ => $MATCHES{$_}; " for (keys %MATCHES);
+print "\n\n";
 
 
